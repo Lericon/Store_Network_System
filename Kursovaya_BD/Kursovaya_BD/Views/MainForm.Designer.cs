@@ -95,6 +95,7 @@
             // 
             // SearchTextBox
             // 
+            SearchTextBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             SearchTextBox.Font = new Font("Bahnschrift", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
             SearchTextBox.Location = new Point(133, 8);
             SearchTextBox.Name = "SearchTextBox";
@@ -103,7 +104,7 @@
             // 
             // SearchBtn
             // 
-            SearchBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            SearchBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             SearchBtn.Font = new Font("Bahnschrift", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
             SearchBtn.Location = new Point(12, 8);
             SearchBtn.Name = "SearchBtn";

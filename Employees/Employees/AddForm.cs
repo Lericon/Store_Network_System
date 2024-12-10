@@ -45,10 +45,16 @@ namespace Employees
             {
                 if (openType == "Edit" && selectedId != null)
                 {
+                    AddBtn.Text = "Обновить";
                     if (isAdmin)
                     {
                         AdminCheckBox.Visible = true;
                         ChangePasswordBtn.Visible = true;
+                    }
+                    else
+                    {
+                        AdminCheckBox.Visible = false;
+                        ChangePasswordBtn.Visible = false;
                     }
                     using (var connection = new NpgsqlConnection(_connectionString))
                     {
@@ -132,6 +138,7 @@ namespace Employees
                 }
                 else if (openType == "Add")
                 {
+                    AddBtn.Text = "Создать";
                     if (isAdmin)
                     {
                         AdminCheckBox.Visible = true;

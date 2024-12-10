@@ -67,9 +67,9 @@
             label2.Font = new Font("Bahnschrift", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
             label2.Location = new Point(12, 42);
             label2.Name = "label2";
-            label2.Size = new Size(247, 25);
+            label2.Size = new Size(270, 25);
             label2.TabIndex = 1;
-            label2.Text = "Добавление сотрудника";
+            label2.Text = "Управление сотрудниками";
             // 
             // label1
             // 
@@ -188,10 +188,11 @@
             // 
             // AddBtn
             // 
+            AddBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             AddBtn.Font = new Font("Bahnschrift", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
             AddBtn.Location = new Point(12, 494);
             AddBtn.Name = "AddBtn";
-            AddBtn.Size = new Size(130, 50);
+            AddBtn.Size = new Size(150, 50);
             AddBtn.TabIndex = 12;
             AddBtn.Text = "Создать";
             AddBtn.UseVisualStyleBackColor = true;
@@ -228,6 +229,7 @@
             // 
             // CancelBtn
             // 
+            CancelBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             CancelBtn.Font = new Font("Bahnschrift", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
             CancelBtn.Location = new Point(934, 494);
             CancelBtn.Name = "CancelBtn";

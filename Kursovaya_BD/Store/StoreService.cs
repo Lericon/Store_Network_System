@@ -6,15 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnitOfMeasurements
+namespace Store
 {
-    public class CityService
+    public class StoreService
     {
         private readonly string _connectionString;
         private User _currentUser;
         private Form? mainForm;
 
-        public CityService(string connectionString, User currentUser, Form? mainForm)
+        public StoreService(string connectionString, User currentUser, Form? mainForm)
         {
             _connectionString = connectionString;
             _currentUser = currentUser;
@@ -24,28 +24,30 @@ namespace UnitOfMeasurements
             }
         }
 
-        public List<SharedModels.City> GetCitiesAsync()
+        public List<SharedModels.Store> GetStoresAsync()
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 connection.Open();
-                var query = "SELECT * FROM city;";
-                List<SharedModels.City> cities = new List<SharedModels.City>();
+                var query = "SELECT * FROM store;";
+                List<SharedModels.Store> stores = new List<SharedModels.Store>();
                 using (var command = new NpgsqlCommand(query, connection))
                 {
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            cities.Add(new SharedModels.City
+                            stores.Add(new SharedModels.Store
                             {
                                 Id = reader.GetInt32(0),
-                                CityName = reader.GetString(1)
+                                StoreName = reader.GetString(1),
+                                CityId = reader.GetInt32(2),
+                                StreetId = reader.GetInt32(3)
                             });
                         }
                     }
                 }
-                return cities;
+                return stores;
             }
         }
     }

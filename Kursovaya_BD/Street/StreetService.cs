@@ -6,15 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnitOfMeasurements
+namespace Street
 {
-    public class CityService
+    public class StreetService
     {
         private readonly string _connectionString;
         private User _currentUser;
         private Form? mainForm;
 
-        public CityService(string connectionString, User currentUser, Form? mainForm)
+        public StreetService(string connectionString, User currentUser, Form? mainForm)
         {
             _connectionString = connectionString;
             _currentUser = currentUser;
@@ -24,28 +24,28 @@ namespace UnitOfMeasurements
             }
         }
 
-        public List<SharedModels.City> GetCitiesAsync()
+        public List<SharedModels.Street> GetStreetsAsync()
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 connection.Open();
-                var query = "SELECT * FROM city;";
-                List<SharedModels.City> cities = new List<SharedModels.City>();
+                var query = "SELECT * FROM street;";
+                List<SharedModels.Street> streets = new List<SharedModels.Street>();
                 using (var command = new NpgsqlCommand(query, connection))
                 {
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            cities.Add(new SharedModels.City
+                            streets.Add(new SharedModels.Street
                             {
                                 Id = reader.GetInt32(0),
-                                CityName = reader.GetString(1)
+                                StreetName = reader.GetString(1)
                             });
                         }
                     }
                 }
-                return cities;
+                return streets;
             }
         }
     }

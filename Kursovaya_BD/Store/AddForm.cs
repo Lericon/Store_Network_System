@@ -2,14 +2,13 @@
 using SharedModels;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using System.Data;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
-namespace City
+namespace Store
 {
     public partial class AddForm : Form, IConnectionStringConsumer
     {
         private string _connectionString;
-        public int _currentCityId;
+        public int _currentStoreId;
         public AddForm(float fontSize)
         {
             InitializeComponent();
@@ -48,7 +47,7 @@ namespace City
                     using (var connection = new NpgsqlConnection(_connectionString))
                     {
                         connection.Open();
-                        string query = "SELECT * FROM city WHERE id = @SelectedId;";
+                        string query = "SELECT * FROM store WHERE id = @SelectedId;";
                         using (var command = new NpgsqlCommand(query, connection))
                         {
                             command.Parameters.AddWithValue("SelectedId", selectedId);
@@ -56,29 +55,29 @@ namespace City
                             {
                                 if (reader.Read())
                                 {
-                                    _currentCityId = reader.GetInt32(0);
+                                    _currentStoreId = reader.GetInt32(0);
                                     NameTextBox.Text = reader.GetString(1);
                                 }
                             }
                         }
                     }
-                    CreateBtn.Click += UpdateCity;
+                    CreateBtn.Click += UpdateStore;
                 }
                 else if (openType == "Delete")
                 {
-                    if (MessageBox.Show("Вы уверены, что хотите удалить этот город?", "Удаление данных", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    if (MessageBox.Show("Вы уверены, что хотите удалить этот магазин?", "Удаление данных", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         using (var connection = new NpgsqlConnection(_connectionString))
                         {
                             connection.Open();
-                            string query = "DELETE FROM city WHERE id = @Id;";
+                            string query = "DELETE FROM store WHERE id = @Id;";
                             using (var command = new NpgsqlCommand(query, connection))
                             {
                                 command.Parameters.AddWithValue("Id", selectedId);
                                 command.ExecuteNonQuery();
                             }
                         }
-                        MessageBox.Show("Удаление города успешно!");
+                        MessageBox.Show("Удаление магазина успешно!");
                         this.Close();
                     }
                     else
@@ -98,9 +97,9 @@ namespace City
             }
         }
 
-        private void UpdateCity(object sender, EventArgs e)
+        private void UpdateStore(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Вы уверены, что хотите обновить данные этого города?", "Обновление данных", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Вы уверены, что хотите обновить данные этого магазина?", "Обновление данных", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 if (string.IsNullOrEmpty(NameTextBox.Text))
                 {
@@ -112,15 +111,15 @@ namespace City
                     using (var connection = new NpgsqlConnection(_connectionString))
                     {
                         connection.Open();
-                        string query = "UPDATE city SET city_name = @CityName WHERE id = @SelectedId;";
+                        string query = "UPDATE store SET store_name = @StoreName WHERE id = @SelectedId;";
                         using (var command = new NpgsqlCommand(query, connection))
                         {
-                            command.Parameters.AddWithValue("CityName", NameTextBox.Text);
-                            command.Parameters.AddWithValue("SelectedId", _currentCityId);
+                            command.Parameters.AddWithValue("StoreName", NameTextBox.Text);
+                            command.Parameters.AddWithValue("SelectedId", _currentStoreId);
                             command.ExecuteNonQuery();
                         }
                     }
-                    MessageBox.Show("Данные о городе изменены успешно!");
+                    MessageBox.Show("Данные о магазине изменены успешно!");
                     this.Close();
                 }
                 catch (Exception ex)
@@ -130,15 +129,15 @@ namespace City
             }
         }
 
-        private void SaveCity(string cityName)
+        private void SaveStore(string StoreName)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 connection.Open();
-                string query = "INSERT INTO city (city_name) VALUES (@CityName);";
+                string query = "INSERT INTO store (store_name) VALUES (@StoreName);";
                 using (var command = new NpgsqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("CityName", cityName);
+                    command.Parameters.AddWithValue("StoreName", StoreName);
                     command.ExecuteNonQuery();
                 }
             }
@@ -148,15 +147,15 @@ namespace City
         {
             try
             {
-                string cityName = NameTextBox.Text;
-                if (string.IsNullOrEmpty(cityName))
+                string StoreName = NameTextBox.Text;
+                if (string.IsNullOrEmpty(StoreName))
                 {
                     MessageBox.Show("Пожалуйста, заполните все поля.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                SaveCity(cityName);
+                SaveStore(StoreName);
                 this.DialogResult = DialogResult.OK;
-                MessageBox.Show("Город успешно добавлен!");
+                MessageBox.Show("Магазин успешно добавлен!");
                 this.Close();
             }
             catch (Exception ex)

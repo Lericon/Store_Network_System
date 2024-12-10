@@ -127,6 +127,12 @@ namespace Employees.Services
             if (_currentUser.IsAdmin)
             {
                 addForm.AdminCheckBox.Visible = true;
+                addForm.TreeView.Enabled = true;
+            }
+            else
+            {
+                addForm.AdminCheckBox.Visible = false;
+                addForm.TreeView.Enabled = false;
             }
             using (var connection = new NpgsqlConnection(_connection))
             {

@@ -1,4 +1,4 @@
-﻿namespace UnitOfMeasurements
+﻿namespace Street
 {
     partial class AddForm
     {
@@ -73,11 +73,11 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Bahnschrift", 24F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label3.Location = new Point(64, 90);
+            label3.Location = new Point(167, 90);
             label3.Name = "label3";
-            label3.Size = new Size(472, 39);
+            label3.Size = new Size(266, 39);
             label3.TabIndex = 2;
-            label3.Text = "Название единицы измерения:";
+            label3.Text = "Название улицы:";
             // 
             // NameTextBox
             // 
@@ -122,7 +122,7 @@
             Controls.Add(label3);
             Controls.Add(TopPanel);
             Name = "AddForm";
-            Text = "Единицы измерения";
+            Text = "Улицы";
             TopPanel.ResumeLayout(false);
             TopPanel.PerformLayout();
             ResumeLayout(false);

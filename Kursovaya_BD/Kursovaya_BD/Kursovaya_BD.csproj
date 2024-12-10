@@ -21,6 +21,11 @@
     <ProjectReference Include="..\..\Employees\Employees\Employees.csproj" />
     <ProjectReference Include="..\..\SharedModels\SharedModels\SharedModels.csproj" />
     <ProjectReference Include="..\..\UnitOfMeasurements\UnitOfMeasurements\UnitOfMeasurements.csproj" />
+    <ProjectReference Include="..\Bank\Bank.csproj" />
+    <ProjectReference Include="..\Departments\Department.csproj" />
+    <ProjectReference Include="..\Qualifications\Qualification.csproj" />
+    <ProjectReference Include="..\Store\Store.csproj" />
+    <ProjectReference Include="..\Street\Street.csproj" />
   </ItemGroup>
 
   <ItemGroup>

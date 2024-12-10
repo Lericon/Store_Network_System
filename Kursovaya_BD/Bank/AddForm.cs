@@ -2,14 +2,13 @@
 using SharedModels;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using System.Data;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
-namespace City
+namespace Bank
 {
     public partial class AddForm : Form, IConnectionStringConsumer
     {
         private string _connectionString;
-        public int _currentCityId;
+        public int _currentBankId;
         public AddForm(float fontSize)
         {
             InitializeComponent();
@@ -48,7 +47,7 @@ namespace City
                     using (var connection = new NpgsqlConnection(_connectionString))
                     {
                         connection.Open();
-                        string query = "SELECT * FROM city WHERE id = @SelectedId;";
+                        string query = "SELECT * FROM bank WHERE id = @SelectedId;";
                         using (var command = new NpgsqlCommand(query, connection))
                         {
                             command.Parameters.AddWithValue("SelectedId", selectedId);
@@ -56,29 +55,29 @@ namespace City
                             {
                                 if (reader.Read())
                                 {
-                                    _currentCityId = reader.GetInt32(0);
+                                    _currentBankId = reader.GetInt32(0);
                                     NameTextBox.Text = reader.GetString(1);
                                 }
                             }
                         }
                     }
-                    CreateBtn.Click += UpdateCity;
+                    CreateBtn.Click += UpdateBank;
                 }
                 else if (openType == "Delete")
                 {
-                    if (MessageBox.Show("Вы уверены, что хотите удалить этот город?", "Удаление данных", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    if (MessageBox.Show("Вы уверены, что хотите удалить этот банк?", "Удаление данных", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         using (var connection = new NpgsqlConnection(_connectionString))
                         {
                             connection.Open();
-                            string query = "DELETE FROM city WHERE id = @Id;";
+                            string query = "DELETE FROM bank WHERE id = @Id;";
                             using (var command = new NpgsqlCommand(query, connection))
                             {
                                 command.Parameters.AddWithValue("Id", selectedId);
                                 command.ExecuteNonQuery();
                             }
                         }
-                        MessageBox.Show("Удаление города успешно!");
+                        MessageBox.Show("Удаление банка успешно!");
                         this.Close();
                     }
                     else
@@ -98,9 +97,9 @@ namespace City
             }
         }
 
-        private void UpdateCity(object sender, EventArgs e)
+        private void UpdateBank(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Вы уверены, что хотите обновить данные этого города?", "Обновление данных", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Вы уверены, что хотите обновить данные этого банка?", "Обновление данных", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 if (string.IsNullOrEmpty(NameTextBox.Text))
                 {
@@ -112,15 +111,15 @@ namespace City
                     using (var connection = new NpgsqlConnection(_connectionString))
                     {
                         connection.Open();
-                        string query = "UPDATE city SET city_name = @CityName WHERE id = @SelectedId;";
+                        string query = "UPDATE bank SET bank_name = @BankName WHERE id = @SelectedId;";
                         using (var command = new NpgsqlCommand(query, connection))
                         {
-                            command.Parameters.AddWithValue("CityName", NameTextBox.Text);
-                            command.Parameters.AddWithValue("SelectedId", _currentCityId);
+                            command.Parameters.AddWithValue("BankName", NameTextBox.Text);
+                            command.Parameters.AddWithValue("SelectedId", _currentBankId);
                             command.ExecuteNonQuery();
                         }
                     }
-                    MessageBox.Show("Данные о городе изменены успешно!");
+                    MessageBox.Show("Данные о банке изменены успешно!");
                     this.Close();
                 }
                 catch (Exception ex)
@@ -130,15 +129,15 @@ namespace City
             }
         }
 
-        private void SaveCity(string cityName)
+        private void SaveBank(string BankName)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 connection.Open();
-                string query = "INSERT INTO city (city_name) VALUES (@CityName);";
+                string query = "INSERT INTO bank (bank_name) VALUES (@BankName);";
                 using (var command = new NpgsqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("CityName", cityName);
+                    command.Parameters.AddWithValue("BankName", BankName);
                     command.ExecuteNonQuery();
                 }
             }
@@ -148,15 +147,15 @@ namespace City
         {
             try
             {
-                string cityName = NameTextBox.Text;
-                if (string.IsNullOrEmpty(cityName))
+                string BankName = NameTextBox.Text;
+                if (string.IsNullOrEmpty(BankName))
                 {
                     MessageBox.Show("Пожалуйста, заполните все поля.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                SaveCity(cityName);
+                SaveBank(BankName);
                 this.DialogResult = DialogResult.OK;
-                MessageBox.Show("Город успешно добавлен!");
+                MessageBox.Show("Банк успешно добавлен!");
                 this.Close();
             }
             catch (Exception ex)

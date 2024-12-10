@@ -1,4 +1,4 @@
-﻿namespace UnitOfMeasurements
+﻿namespace Store
 {
     partial class AddForm
     {
@@ -55,9 +55,9 @@
             label2.Font = new Font("Bahnschrift", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
             label2.Location = new Point(12, 42);
             label2.Name = "label2";
-            label2.Size = new Size(211, 25);
+            label2.Size = new Size(108, 25);
             label2.TabIndex = 1;
-            label2.Text = "Единицы измерения";
+            label2.Text = "Магазины";
             // 
             // label1
             // 
@@ -73,11 +73,11 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Bahnschrift", 24F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label3.Location = new Point(64, 90);
+            label3.Location = new Point(145, 90);
             label3.Name = "label3";
-            label3.Size = new Size(472, 39);
+            label3.Size = new Size(310, 39);
             label3.TabIndex = 2;
-            label3.Text = "Название единицы измерения:";
+            label3.Text = "Название магазина:";
             // 
             // NameTextBox
             // 
@@ -122,7 +122,7 @@
             Controls.Add(label3);
             Controls.Add(TopPanel);
             Name = "AddForm";
-            Text = "Единицы измерения";
+            Text = "Магазины";
             TopPanel.ResumeLayout(false);
             TopPanel.PerformLayout();
             ResumeLayout(false);

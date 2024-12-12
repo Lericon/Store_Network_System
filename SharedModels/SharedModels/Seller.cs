@@ -12,11 +12,11 @@ namespace SharedModels
         public string LastName { get; set; }
         public string FirstName { get; set; }
         public string Surname { get; set; }
-        public bool Gender { get; set; }
+        public string Gender { get; set; }
         public int Age { get; set; }
         public string WorkExp { get; set; }
-        public int StoreId { get; set; }
-        public int DepartmentId { get; set; }
-        public int QualificationId { get; set; }
+        public string? StoreId { get; set; }
+        public string? DepartmentId { get; set; }
+        public string? QualificationId { get; set; }
     }
 }

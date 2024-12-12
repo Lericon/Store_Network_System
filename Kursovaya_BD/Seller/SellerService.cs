@@ -44,18 +44,28 @@ namespace Seller
                     {
                         while (reader.Read())
                         {
+                            bool SellerGender = reader.GetBoolean(4);
+                            string GenderString;
+                            if (SellerGender)
+                            {
+                                GenderString = "Женский";
+                            }
+                            else
+                            {
+                                GenderString = "Мужской";
+                            }
                             sellers.Add(new SharedModels.Seller
                             {
                                 Id = reader.GetInt32(0),
                                 LastName = reader.GetString(1),
                                 FirstName = reader.GetString(2),
                                 Surname = reader.GetString(3),
-                                Gender = reader.GetBoolean(4),
+                                Gender = GenderString,
                                 Age = reader.GetInt32(5),
                                 WorkExp = reader.GetString(6),
-                                StoreId = reader.GetInt32(7),
-                                DepartmentId = reader.GetInt32(8),
-                                QualificationId = reader.GetInt32(9)
+                                StoreId = reader.IsDBNull(7) ? null : reader.GetString(7),
+                                DepartmentId = reader.IsDBNull(8) ? null : reader.GetString(8),
+                                QualificationId = reader.IsDBNull(9) ? null : reader.GetString(9)
                             });
                         }
                     }

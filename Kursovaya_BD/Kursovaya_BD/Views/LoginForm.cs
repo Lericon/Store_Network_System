@@ -97,7 +97,7 @@ namespace Kursovaya_BD.Views
         public void Login(User user)
         {
             MainForm form = new MainForm(user);
-            this.Visible = true;
+            this.Visible = false;
             form.ShowDialog();
             LoginTextBox.Text = "";
             PasswordTextBox.Text = "";

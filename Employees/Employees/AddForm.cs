@@ -335,8 +335,10 @@ namespace Employees
                 Tag = module // Привязываем объект Module к узлу
             };
 
+            bool isRootNode = module.IdParent == 0;
+
             // Если у модуля есть дочерние элементы, не создаем чекбоксы
-            if (!moduleDict.ContainsKey(module.Id) || moduleDict[module.Id].Count == 0)
+            if (isRootNode)
             {
                 // Чекбоксы только на узлах без дочерних элементов
                 var readNode = new TreeNode("Чтение") { Checked = false };
@@ -349,14 +351,14 @@ namespace Employees
                 node.Nodes.Add(editNode);
                 node.Nodes.Add(deleteNode);
             }
-            else
-            {
-                // Не добавляем чекбоксы, если у узла есть дочерние элементы
-                foreach (var childModule in moduleDict[module.Id])
-                {
-                    node.Nodes.Add(CreateTreeNode(childModule, moduleDict));
-                }
-            }
+            //else
+            //{
+            //    // Не добавляем чекбоксы, если у узла есть дочерние элементы
+            //    foreach (var childModule in moduleDict[module.Id])
+            //    {
+            //        node.Nodes.Add(CreateTreeNode(childModule, moduleDict));
+            //    }
+            //}
 
             return node;
         }

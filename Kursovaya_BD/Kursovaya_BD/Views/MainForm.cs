@@ -464,5 +464,18 @@ namespace Kursovaya_BD.Views
             // Отображаем фильтрованную таблицу
             MainDataGridView.DataSource = filteredTable;
         }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            FirstUserForm form = new FirstUserForm("Вы уверены, что хотите выйти?");
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                e.Cancel = false;
+            }
+            else
+            {
+                e.Cancel = true;
+            }
+        }
     }
 }

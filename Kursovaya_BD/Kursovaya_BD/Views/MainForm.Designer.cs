@@ -167,6 +167,7 @@
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Торговая сеть магазинов";
+            FormClosing += MainForm_FormClosing;
             ((System.ComponentModel.ISupportInitialize)MainDataGridView).EndInit();
             MainBottomPanel.ResumeLayout(false);
             MainBottomPanel.PerformLayout();

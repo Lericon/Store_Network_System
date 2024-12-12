@@ -111,6 +111,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(454, 311);
+            ControlBox = false;
             Controls.Add(FirstUserRTBox);
             Controls.Add(panel1);
             Controls.Add(FirstUserBottomPanel);

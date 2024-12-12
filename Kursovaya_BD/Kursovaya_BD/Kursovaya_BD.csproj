@@ -24,6 +24,7 @@
     <ProjectReference Include="..\Bank\Bank.csproj" />
     <ProjectReference Include="..\Departments\Department.csproj" />
     <ProjectReference Include="..\Qualifications\Qualification.csproj" />
+    <ProjectReference Include="..\Seller\Seller.csproj" />
     <ProjectReference Include="..\Store\Store.csproj" />
     <ProjectReference Include="..\Street\Street.csproj" />
   </ItemGroup>

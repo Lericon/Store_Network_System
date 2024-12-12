@@ -9,6 +9,8 @@ namespace Store
     {
         private string _connectionString;
         public int _currentStoreId;
+        private readonly Dictionary<string, int> _cities = [];
+        private readonly Dictionary<string, int> _streets = [];
         public AddForm(float fontSize)
         {
             InitializeComponent();
@@ -37,6 +39,8 @@ namespace Store
         public void SetConnectionString(string connectionString)
         {
             _connectionString = connectionString;
+            LoadCitiesComboBox();
+            LoadStreetsComboBox();
         }
         public void SetOpenType(string openType, int? selectedId, bool isAdmin)
         {
@@ -57,6 +61,8 @@ namespace Store
                                 {
                                     _currentStoreId = reader.GetInt32(0);
                                     NameTextBox.Text = reader.GetString(1);
+                                    cityComboBox.SelectedIndex = reader.GetInt32(2) - 1;
+                                    streetComboBox.SelectedIndex = reader.GetInt32(3) - 1;
                                 }
                             }
                         }
@@ -101,9 +107,21 @@ namespace Store
         {
             if (MessageBox.Show("Вы уверены, что хотите обновить данные этого магазина?", "Обновление данных", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                if (string.IsNullOrEmpty(NameTextBox.Text))
+                if (string.IsNullOrEmpty(NameTextBox.Text) || cityComboBox.SelectedItem == null || streetComboBox.SelectedItem == null)
                 {
                     MessageBox.Show("Пожалуйста, заполните все поля.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                string? cityName = cityComboBox.SelectedItem.ToString();
+                string? streetName = streetComboBox.SelectedItem.ToString();
+                if (!_cities.TryGetValue(cityName, out var cityid))
+                {
+                    MessageBox.Show($"Не существует отдела с названием {cityName}.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                if (!_streets.TryGetValue(streetName, out var streetid))
+                {
+                    MessageBox.Show($"Не существует квалификации с названием {streetName}.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 try
@@ -111,11 +129,18 @@ namespace Store
                     using (var connection = new NpgsqlConnection(_connectionString))
                     {
                         connection.Open();
-                        string query = "UPDATE store SET store_name = @StoreName WHERE id = @SelectedId;";
+                        string query = @"
+                                UPDATE store 
+                                SET store_name = @StoreName,
+                                    city_id = @CityId,
+                                    street_id = @StreetId,
+                                WHERE id = @SelectedId;";
                         using (var command = new NpgsqlCommand(query, connection))
                         {
                             command.Parameters.AddWithValue("StoreName", NameTextBox.Text);
                             command.Parameters.AddWithValue("SelectedId", _currentStoreId);
+                            command.Parameters.AddWithValue("CityId", cityid);
+                            command.Parameters.AddWithValue("StreetId", streetid);
                             command.ExecuteNonQuery();
                         }
                     }
@@ -129,15 +154,19 @@ namespace Store
             }
         }
 
-        private void SaveStore(string StoreName)
+        private void SaveStore(string StoreName, int cityid, int streetid)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 connection.Open();
-                string query = "INSERT INTO store (store_name) VALUES (@StoreName);";
+                string query = @"
+                        INSERT INTO store (store_name, city_id, street_id) 
+                        VALUES (@StoreName, @CityId, @StreetId);";
                 using (var command = new NpgsqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("StoreName", StoreName);
+                    command.Parameters.AddWithValue("CityId", cityid);
+                    command.Parameters.AddWithValue("StreetId", streetid);
                     command.ExecuteNonQuery();
                 }
             }
@@ -148,12 +177,24 @@ namespace Store
             try
             {
                 string StoreName = NameTextBox.Text;
-                if (string.IsNullOrEmpty(StoreName))
+                if (string.IsNullOrEmpty(NameTextBox.Text) || cityComboBox.SelectedItem == null || streetComboBox.SelectedItem == null)
                 {
                     MessageBox.Show("Пожалуйста, заполните все поля.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                SaveStore(StoreName);
+                string? cityName = cityComboBox.SelectedItem.ToString();
+                string? streetName = streetComboBox.SelectedItem.ToString();
+                if (!_cities.TryGetValue(cityName, out var cityid))
+                {
+                    MessageBox.Show($"Не существует отдела с названием {cityName}.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                if (!_streets.TryGetValue(streetName, out var streetid))
+                {
+                    MessageBox.Show($"Не существует квалификации с названием {streetName}.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                SaveStore(StoreName, cityid, streetid);
                 this.DialogResult = DialogResult.OK;
                 MessageBox.Show("Магазин успешно добавлен!");
                 this.Close();
@@ -167,6 +208,52 @@ namespace Store
         private void CancelBtn_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void LoadCitiesComboBox()
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                var query = @"SELECT id, city_name FROM city;";
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var idName = reader.GetInt32(0);
+                            var cityName = reader.GetString(1);
+
+                            cityComboBox.Items.Add(cityName);
+                            _cities.Add(cityName, idName);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void LoadStreetsComboBox()
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                var query = @"SELECT id, street_name FROM street;";
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var idName = reader.GetInt32(0);
+                            var streetName = reader.GetString(1);
+
+                            streetComboBox.Items.Add(streetName);
+                            _streets.Add(streetName, idName);
+                        }
+                    }
+                }
+            }
         }
     }
 }

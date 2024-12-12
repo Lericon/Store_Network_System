@@ -37,8 +37,10 @@
             // MainRTB
             // 
             MainRTB.Dock = DockStyle.Fill;
+            MainRTB.Font = new Font("Bahnschrift", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
             MainRTB.Location = new Point(0, 0);
             MainRTB.Name = "MainRTB";
+            MainRTB.ReadOnly = true;
             MainRTB.Size = new Size(454, 261);
             MainRTB.TabIndex = 0;
             MainRTB.Text = "";
@@ -55,12 +57,13 @@
             // 
             // ExitBtn
             // 
+            ExitBtn.Anchor = AnchorStyles.Bottom;
             ExitBtn.Font = new Font("Bahnschrift", 18F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            ExitBtn.Location = new Point(326, 6);
+            ExitBtn.Location = new Point(172, 6);
             ExitBtn.Name = "ExitBtn";
             ExitBtn.Size = new Size(125, 40);
             ExitBtn.TabIndex = 0;
-            ExitBtn.Text = "Выйти";
+            ExitBtn.Text = "Ок";
             ExitBtn.UseVisualStyleBackColor = true;
             ExitBtn.Click += ExitBtn_Click;
             // 
@@ -72,6 +75,8 @@
             Controls.Add(MainRTB);
             Controls.Add(MessageBottomPanel);
             Name = "Message";
+            ShowIcon = false;
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Сообщение";
             MessageBottomPanel.ResumeLayout(false);
             ResumeLayout(false);

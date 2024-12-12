@@ -29,7 +29,12 @@ namespace Store
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 connection.Open();
-                var query = "SELECT * FROM store;";
+                var query = @"
+                    SELECT s.id, s.store_name, c.city_name, st.street_name
+                    FROM store s
+                    LEFT JOIN city c ON s.city_id = c.id
+                    LEFT JOIN street st ON s.street_id = st.id
+                    ORDER BY s.id;";
                 List<SharedModels.Store> stores = new List<SharedModels.Store>();
                 using (var command = new NpgsqlCommand(query, connection))
                 {
@@ -41,8 +46,8 @@ namespace Store
                             {
                                 Id = reader.GetInt32(0),
                                 StoreName = reader.GetString(1),
-                                CityId = reader.GetInt32(2),
-                                StreetId = reader.GetInt32(3)
+                                CityId = reader.IsDBNull(2) ? null : reader.GetString(2),
+                                StreetId = reader.IsDBNull(3) ? null : reader.GetString(3)
                             });
                         }
                     }

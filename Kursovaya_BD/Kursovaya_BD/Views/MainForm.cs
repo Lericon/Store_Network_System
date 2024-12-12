@@ -175,6 +175,7 @@ namespace Kursovaya_BD.Views
             MainDataGridView.AutoSize = true;
             MainDataGridView.DataSource = dataTable;
             MainDataGridView.Refresh();
+            CenterToScreen();
         }
 
         public void BuildMenu(List<SharedModels.Module> modules, List<Role> userRoles)

@@ -11,8 +11,11 @@ namespace Seller
         private string _connectionString;
         public int _currentSellerId;
         private readonly Dictionary<string, int> _stores = [];
+        private readonly Dictionary<string, int> _storesCombo = [];
         private readonly Dictionary<string, int> _departments = [];
+        private readonly Dictionary<string, int> _departmentsCombo = [];
         private readonly Dictionary<string, int> _qualifications = [];
+        private readonly Dictionary<string, int> _qualificationsCombo = [];
         public AddForm(float fontSize)
         {
             InitializeComponent();
@@ -77,9 +80,9 @@ namespace Seller
                                     }
                                     AgeNumUpDown.Value = reader.GetInt32(5);
                                     WorkExpTextBox.Text = reader.GetString(6);
-                                    storeComboBox.SelectedIndex = reader.GetInt32(7) - 1;
-                                    departmentComboBox.SelectedIndex = reader.GetInt32(8) - 1;
-                                    qualificationComboBox.SelectedIndex = reader.GetInt32(9) - 1;
+                                    storeComboBox.SelectedIndex = _storesCombo[_stores.FirstOrDefault(x => x.Value == reader.GetInt32(7)).Key];
+                                    departmentComboBox.SelectedIndex = _departmentsCombo[_departments.FirstOrDefault(x => x.Value == reader.GetInt32(8)).Key];
+                                    qualificationComboBox.SelectedIndex = _qualificationsCombo[_qualifications.FirstOrDefault(x => x.Value == reader.GetInt32(9)).Key];
                                 }
                             }
                         }
@@ -284,6 +287,7 @@ namespace Seller
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
+                int i = 0;
                 connection.Open();
                 var query = @"
                     SELECT s.id, s.store_name, c.city_name, st.street_name 
@@ -304,6 +308,8 @@ namespace Seller
 
                             storeComboBox.Items.Add(storeName + " " + cityName + " " + streetName);
                             _stores.Add(storeName, idName);
+                            _storesCombo.Add(storeName, i);
+                            i++;
                         }
                     }
                 }
@@ -314,6 +320,7 @@ namespace Seller
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
+                int i = 0;
                 connection.Open();
                 var query = @"SELECT id, department_name FROM department;";
                 using (var command = new NpgsqlCommand(query, connection))
@@ -327,6 +334,8 @@ namespace Seller
 
                             departmentComboBox.Items.Add(departmentName);
                             _departments.Add(departmentName, idName);
+                            _departmentsCombo.Add(departmentName, i);
+                            i++;
                         }
                     }
                 }
@@ -337,6 +346,7 @@ namespace Seller
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
+                int i = 0;
                 connection.Open();
                 var query = @"SELECT id, qualification_name FROM qualification;";
                 using (var command = new NpgsqlCommand(query, connection))
@@ -350,6 +360,8 @@ namespace Seller
 
                             qualificationComboBox.Items.Add(qualificationName);
                             _qualifications.Add(qualificationName, idName);
+                            _qualificationsCombo.Add(qualificationName, i);
+                            i++;
                         }
                     }
                 }

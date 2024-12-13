@@ -9,10 +9,10 @@ namespace SharedModels
     public class Good
     {
         public int Id { get; set; }
-        public string GoodName { get; set; }
+        public string? GoodName { get; set; }
         public int RemainingStock { get; set; }
         public int PurchasePrice { get; set; }
         public int Price { get; set; }
-        public int unit_id { get; set; }
+        public string? UnitName { get; set; }
     }
 }

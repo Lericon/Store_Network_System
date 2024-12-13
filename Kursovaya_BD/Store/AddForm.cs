@@ -10,7 +10,9 @@ namespace Store
         private string _connectionString;
         public int _currentStoreId;
         private readonly Dictionary<string, int> _cities = [];
+        private readonly Dictionary<string, int> _citiesCombo = [];
         private readonly Dictionary<string, int> _streets = [];
+        private readonly Dictionary<string, int> _streetsCombo = [];
         public AddForm(float fontSize)
         {
             InitializeComponent();
@@ -61,8 +63,8 @@ namespace Store
                                 {
                                     _currentStoreId = reader.GetInt32(0);
                                     NameTextBox.Text = reader.GetString(1);
-                                    cityComboBox.SelectedIndex = reader.GetInt32(2) - 1;
-                                    streetComboBox.SelectedIndex = reader.GetInt32(3) - 1;
+                                    cityComboBox.SelectedIndex = _citiesCombo[_cities.FirstOrDefault(x => x.Value == reader.GetInt32(2)).Key];
+                                    streetComboBox.SelectedIndex = _streetsCombo[_streets.FirstOrDefault(x => x.Value == reader.GetInt32(3)).Key];
                                 }
                             }
                         }
@@ -214,6 +216,7 @@ namespace Store
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
+                int i = 0;
                 connection.Open();
                 var query = @"SELECT id, city_name FROM city;";
                 using (var command = new NpgsqlCommand(query, connection))
@@ -227,6 +230,8 @@ namespace Store
 
                             cityComboBox.Items.Add(cityName);
                             _cities.Add(cityName, idName);
+                            _citiesCombo.Add(cityName, i);
+                            i++;
                         }
                     }
                 }
@@ -237,6 +242,7 @@ namespace Store
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
+                int i = 0;
                 connection.Open();
                 var query = @"SELECT id, street_name FROM street;";
                 using (var command = new NpgsqlCommand(query, connection))
@@ -250,6 +256,8 @@ namespace Store
 
                             streetComboBox.Items.Add(streetName);
                             _streets.Add(streetName, idName);
+                            _streetsCombo.Add(streetName, i);
+                            i++;
                         }
                     }
                 }

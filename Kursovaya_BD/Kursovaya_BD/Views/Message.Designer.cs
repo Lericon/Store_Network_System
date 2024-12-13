@@ -43,6 +43,7 @@
             MainRTB.ReadOnly = true;
             MainRTB.Size = new Size(454, 261);
             MainRTB.TabIndex = 0;
+            MainRTB.TabStop = false;
             MainRTB.Text = "";
             // 
             // MessageBottomPanel

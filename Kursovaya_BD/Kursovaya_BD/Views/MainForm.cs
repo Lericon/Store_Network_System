@@ -167,6 +167,8 @@ namespace Kursovaya_BD.Views
                     parentMenuItem.DropDownItems.Add(menuItem);
                 }
             }
+            MainMenu.PerformLayout();
+            AdjustFormSize();
         }
 
         private void ShowDataInGrid(DataTable dataTable)
@@ -303,6 +305,18 @@ namespace Kursovaya_BD.Views
                 parentMenuItem.DropDownItems.Add(menuItem);
             }
         }
+
+        private void AdjustFormSize()
+        {
+            // Получаем текущую ширину MenuStrip
+            int menuStripWidth = MainMenu.PreferredSize.Width;
+
+            // Проверяем, достаточно ли ширины формы для размещения MenuStrip
+            if (menuStripWidth > this.Width)
+            {
+                this.Width = menuStripWidth + 20; // Добавляем небольшой отступ
+            }
+        }
         private void AddBtn_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_currentDLL))
@@ -434,10 +448,10 @@ namespace Kursovaya_BD.Views
         private void SearchBtn_Click(object sender, EventArgs e)
         {
             RefreshData();
-            string searchText = SearchTextBox.Text.Trim().ToLower(); // Текст для поиска
+            string searchText = SearchTextBox.Text.Trim().ToLower();
 
-            DataTable originalDataTable = MainDataGridView.DataSource as DataTable; // Получаем DataTable
-            if (originalDataTable == null) return; // Проверяем наличие данных
+            DataTable originalDataTable = MainDataGridView.DataSource as DataTable; 
+            if (originalDataTable == null) return; 
 
             if (string.IsNullOrEmpty(searchText))
             {
@@ -446,7 +460,7 @@ namespace Kursovaya_BD.Views
             }
 
             // Создаем новый DataTable для фильтрованных данных
-            DataTable filteredTable = originalDataTable.Clone(); // Копируем структуру таблицы
+            DataTable filteredTable = originalDataTable.Clone();
 
             // Перебираем строки и ищем совпадения
             foreach (DataRow row in originalDataTable.Rows)
@@ -456,13 +470,12 @@ namespace Kursovaya_BD.Views
                 {
                     if (item != null && item.ToString().ToLower().Contains(searchText))
                     {
-                        filteredTable.ImportRow(row); // Добавляем строку в результат
-                        break; // Достаточно одного совпадения
+                        filteredTable.ImportRow(row); 
+                        break; 
                     }
                 }
             }
 
-            // Отображаем фильтрованную таблицу
             MainDataGridView.DataSource = filteredTable;
         }
 

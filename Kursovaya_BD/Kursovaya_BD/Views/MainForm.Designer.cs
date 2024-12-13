@@ -48,7 +48,7 @@
             MainMenu.Font = new Font("Bahnschrift", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
             MainMenu.Location = new Point(0, 0);
             MainMenu.Name = "MainMenu";
-            MainMenu.Size = new Size(883, 24);
+            MainMenu.Size = new Size(800, 24);
             MainMenu.TabIndex = 0;
             MainMenu.Text = "Главное меню";
             // 
@@ -76,7 +76,7 @@
             MainDataGridView.MultiSelect = false;
             MainDataGridView.Name = "MainDataGridView";
             MainDataGridView.ReadOnly = true;
-            MainDataGridView.Size = new Size(883, 371);
+            MainDataGridView.Size = new Size(800, 371);
             MainDataGridView.TabIndex = 0;
             // 
             // MainBottomPanel
@@ -90,7 +90,7 @@
             MainBottomPanel.Dock = DockStyle.Bottom;
             MainBottomPanel.Location = new Point(0, 395);
             MainBottomPanel.Name = "MainBottomPanel";
-            MainBottomPanel.Size = new Size(883, 55);
+            MainBottomPanel.Size = new Size(800, 55);
             MainBottomPanel.TabIndex = 1;
             // 
             // SearchTextBox
@@ -118,7 +118,7 @@
             // 
             AddBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             AddBtn.Font = new Font("Bahnschrift", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            AddBtn.Location = new Point(521, 8);
+            AddBtn.Location = new Point(438, 8);
             AddBtn.Name = "AddBtn";
             AddBtn.Size = new Size(115, 40);
             AddBtn.TabIndex = 2;
@@ -130,7 +130,7 @@
             // 
             UpdateBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             UpdateBtn.Font = new Font("Bahnschrift", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            UpdateBtn.Location = new Point(643, 8);
+            UpdateBtn.Location = new Point(560, 8);
             UpdateBtn.Name = "UpdateBtn";
             UpdateBtn.Size = new Size(115, 40);
             UpdateBtn.TabIndex = 1;
@@ -142,7 +142,7 @@
             // 
             DeleteBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             DeleteBtn.Font = new Font("Bahnschrift", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            DeleteBtn.Location = new Point(763, 8);
+            DeleteBtn.Location = new Point(680, 8);
             DeleteBtn.Name = "DeleteBtn";
             DeleteBtn.Size = new Size(115, 40);
             DeleteBtn.TabIndex = 0;
@@ -156,14 +156,14 @@
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
             BackColor = SystemColors.Control;
-            ClientSize = new Size(883, 450);
+            ClientSize = new Size(800, 450);
             Controls.Add(MainDataGridView);
             Controls.Add(MainBottomPanel);
             Controls.Add(MainMenu);
             DoubleBuffered = true;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = MainMenu;
-            MinimumSize = new Size(899, 489);
+            MinimumSize = new Size(816, 489);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Торговая сеть магазинов";

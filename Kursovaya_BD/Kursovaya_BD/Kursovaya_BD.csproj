@@ -21,14 +21,18 @@
     <ProjectReference Include="..\..\Employees\Employees\Employees.csproj" />
     <ProjectReference Include="..\..\SharedModels\SharedModels\SharedModels.csproj" />
     <ProjectReference Include="..\..\UnitOfMeasurements\UnitOfMeasurements\UnitOfMeasurements.csproj" />
+    <ProjectReference Include="..\AboutProgram\AboutProgram.csproj" />
     <ProjectReference Include="..\Bank\Bank.csproj" />
     <ProjectReference Include="..\Departments\Department.csproj" />
     <ProjectReference Include="..\Document\Document.csproj" />
+    <ProjectReference Include="..\Good\Good.csproj" />
     <ProjectReference Include="..\Qualifications\Qualification.csproj" />
+    <ProjectReference Include="..\Request\Request.csproj" />
     <ProjectReference Include="..\Seller\Seller.csproj" />
     <ProjectReference Include="..\Store\Store.csproj" />
     <ProjectReference Include="..\Street\Street.csproj" />
     <ProjectReference Include="..\Supplier\Supplier.csproj" />
+    <ProjectReference Include="..\Supply\Supply.csproj" />
   </ItemGroup>
 
   <ItemGroup>

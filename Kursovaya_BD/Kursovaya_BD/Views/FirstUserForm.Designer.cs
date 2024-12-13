@@ -55,7 +55,7 @@
             FirstFormMessage.Location = new Point(25, 9);
             FirstFormMessage.Name = "FirstFormMessage";
             FirstFormMessage.Size = new Size(403, 33);
-            FirstFormMessage.TabIndex = 0;
+            FirstFormMessage.TabIndex = 100;
             FirstFormMessage.Text = "Подтверждение о регистрации";
             // 
             // FirstUserBottomPanel
@@ -104,6 +104,7 @@
             FirstUserRTBox.RightToLeft = RightToLeft.No;
             FirstUserRTBox.Size = new Size(454, 206);
             FirstUserRTBox.TabIndex = 2;
+            FirstUserRTBox.TabStop = false;
             FirstUserRTBox.Text = "";
             // 
             // FirstUserForm

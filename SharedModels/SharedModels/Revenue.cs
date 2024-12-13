@@ -10,7 +10,7 @@ namespace SharedModels
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
-        public int SellerId { get; set; }
+        public string SellerName { get; set; }
         public int RevenueCount { get; set; }
     }
 }

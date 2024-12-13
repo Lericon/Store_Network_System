@@ -10,6 +10,6 @@ namespace SharedModels
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
-        public int StoreId { get; set; }
+        public string StoreName { get; set; }
     }
 }

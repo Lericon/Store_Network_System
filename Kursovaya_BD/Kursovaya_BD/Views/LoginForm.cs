@@ -30,13 +30,6 @@ namespace Kursovaya_BD.Views
 
             VersionLabel.Location = new System.Drawing.Point(xt, yt);
 
-            CapsLockLabel.Text = "CapsLock: " + (Console.CapsLock ? "¬ключен" : "¬ыключен");
-
-            int xb = LoginBottomPanel.Width - CapsLockLabel.Width - 5;
-            int yb = LoginBottomPanel.Height - CapsLockLabel.Height - 12;
-
-            CapsLockLabel.Location = new System.Drawing.Point(xb, yb);
-
             var CurrentLanguage = InputLanguage.CurrentInputLanguage.Culture.NativeName;
 
             LanguageLabel.Text = "язык ввода: " + CurrentLanguage;
@@ -50,14 +43,6 @@ namespace Kursovaya_BD.Views
         {
             var CurrentLanguage = InputLanguage.CurrentInputLanguage.Culture.NativeName;
             LanguageLabel.Text = "язык ввода: " + CurrentLanguage;
-        }
-
-        private void LoginForm_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.CapsLock)
-            {
-                CapsLockLabel.Text = "CapsLock: " + (Console.CapsLock ? "¬ключен" : "¬ыключен");
-            }
         }
 
         private void LoginBtn_Click(object sender, EventArgs e)

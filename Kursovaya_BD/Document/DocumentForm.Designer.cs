@@ -41,6 +41,10 @@
             CancelSaveBtn = new Button();
             SaveBtn = new Button();
             DocumentDGV = new DataGridView();
+            label4 = new Label();
+            GoodInStoreBtn = new Button();
+            GoodInSupplyBtn = new Button();
+            GoodInRevenueBtn = new Button();
             TopPanel.SuspendLayout();
             LabelPanel.SuspendLayout();
             BottomPanel.SuspendLayout();
@@ -92,11 +96,10 @@
             // richTextBox1
             // 
             richTextBox1.AcceptsTab = true;
-            richTextBox1.Dock = DockStyle.Fill;
             richTextBox1.Font = new Font("Bahnschrift", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
             richTextBox1.Location = new Point(0, 130);
             richTextBox1.Name = "richTextBox1";
-            richTextBox1.Size = new Size(784, 381);
+            richTextBox1.Size = new Size(784, 160);
             richTextBox1.TabIndex = 4;
             richTextBox1.Text = "";
             // 
@@ -117,7 +120,7 @@
             BottomPanel.Controls.Add(CancelSaveBtn);
             BottomPanel.Controls.Add(SaveBtn);
             BottomPanel.Dock = DockStyle.Bottom;
-            BottomPanel.Location = new Point(0, 511);
+            BottomPanel.Location = new Point(0, 591);
             BottomPanel.Name = "BottomPanel";
             BottomPanel.Size = new Size(784, 50);
             BottomPanel.TabIndex = 6;
@@ -190,27 +193,78 @@
             dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
             DocumentDGV.DefaultCellStyle = dataGridViewCellStyle2;
-            DocumentDGV.Dock = DockStyle.Fill;
+            DocumentDGV.Dock = DockStyle.Bottom;
             DocumentDGV.GridColor = Color.DodgerBlue;
-            DocumentDGV.Location = new Point(0, 130);
+            DocumentDGV.Location = new Point(0, 391);
+            DocumentDGV.MaximumSize = new Size(784, 200);
+            DocumentDGV.MinimumSize = new Size(784, 200);
             DocumentDGV.MultiSelect = false;
             DocumentDGV.Name = "DocumentDGV";
             DocumentDGV.ReadOnly = true;
-            DocumentDGV.Size = new Size(784, 381);
+            DocumentDGV.Size = new Size(784, 200);
             DocumentDGV.TabIndex = 7;
-            DocumentDGV.Visible = false;
+            // 
+            // label4
+            // 
+            label4.Anchor = AnchorStyles.Top;
+            label4.AutoSize = true;
+            label4.Font = new Font("Bahnschrift", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label4.Location = new Point(267, 343);
+            label4.Name = "label4";
+            label4.Size = new Size(266, 33);
+            label4.TabIndex = 4;
+            label4.Text = "Вывод SQL-запроса";
+            // 
+            // GoodInStoreBtn
+            // 
+            GoodInStoreBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            GoodInStoreBtn.Font = new Font("Bahnschrift", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            GoodInStoreBtn.Location = new Point(0, 296);
+            GoodInStoreBtn.Name = "GoodInStoreBtn";
+            GoodInStoreBtn.Size = new Size(261, 42);
+            GoodInStoreBtn.TabIndex = 4;
+            GoodInStoreBtn.Text = "Товары в магазине";
+            GoodInStoreBtn.UseVisualStyleBackColor = true;
+            GoodInStoreBtn.Click += GoodInStoreBtn_Click;
+            // 
+            // GoodInSupplyBtn
+            // 
+            GoodInSupplyBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            GoodInSupplyBtn.Font = new Font("Bahnschrift", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            GoodInSupplyBtn.Location = new Point(261, 296);
+            GoodInSupplyBtn.Name = "GoodInSupplyBtn";
+            GoodInSupplyBtn.Size = new Size(261, 42);
+            GoodInSupplyBtn.TabIndex = 8;
+            GoodInSupplyBtn.Text = "Товары в поставке";
+            GoodInSupplyBtn.UseVisualStyleBackColor = true;
+            // 
+            // GoodInRevenueBtn
+            // 
+            GoodInRevenueBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            GoodInRevenueBtn.Font = new Font("Bahnschrift", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            GoodInRevenueBtn.Location = new Point(522, 296);
+            GoodInRevenueBtn.Name = "GoodInRevenueBtn";
+            GoodInRevenueBtn.Size = new Size(261, 42);
+            GoodInRevenueBtn.TabIndex = 9;
+            GoodInRevenueBtn.Text = "Товары в выручке";
+            GoodInRevenueBtn.UseVisualStyleBackColor = true;
             // 
             // DocumentForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
-            ClientSize = new Size(784, 561);
+            ClientSize = new Size(784, 641);
+            Controls.Add(GoodInRevenueBtn);
+            Controls.Add(GoodInSupplyBtn);
+            Controls.Add(GoodInStoreBtn);
+            Controls.Add(label4);
             Controls.Add(DocumentDGV);
             Controls.Add(richTextBox1);
             Controls.Add(BottomPanel);
             Controls.Add(LabelPanel);
             Controls.Add(TopPanel);
+            MinimumSize = new Size(800, 680);
             Name = "DocumentForm";
             ShowIcon = false;
             StartPosition = FormStartPosition.CenterScreen;
@@ -222,6 +276,7 @@
             BottomPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)DocumentDGV).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -238,5 +293,9 @@
         private Button DoBtn;
         private Button CancelBtn;
         private DataGridView DocumentDGV;
+        private Label label4;
+        private Button GoodInStoreBtn;
+        private Button GoodInSupplyBtn;
+        private Button GoodInRevenueBtn;
     }
 }

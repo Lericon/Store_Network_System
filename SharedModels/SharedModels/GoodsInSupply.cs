@@ -8,8 +8,9 @@ namespace SharedModels
 {
     public class GoodsInSupply
     {
+        public int Id { get; set; }
         public int CountGood { get; set; }
-        public int GoodId { get; set; }
+        public string GoodName { get; set; }
         public int SupplyId { get; set; }
     }
 }

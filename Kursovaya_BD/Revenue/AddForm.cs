@@ -2,20 +2,26 @@
 using SharedModels;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using System.Data;
+using System.Xml.Linq;
 
 namespace Revenue
 {
     public partial class AddForm : Form, IConnectionStringConsumer
     {
         private string _connectionString;
-        public int _currentSupplyId;
-        private readonly Dictionary<string, int> _suppliers = [];
-        private readonly Dictionary<string, int> _suppliersCombo = [];
+        public int _currentRevenueId;
+        private readonly Dictionary<string, int> _sellers = [];
+        private readonly Dictionary<string, int> _sellersCombo = [];
+        private readonly Dictionary<string, int> _stores = [];
+        private readonly Dictionary<string, int> _storesCombo = [];
         private readonly Dictionary<string, int> _goods = [];
         private readonly Dictionary<string, int> _goodsCombo = [];
+        private readonly Dictionary<string, int> _goodsId = [];
+        private readonly Dictionary<string, int> _goodsPrice = [];
         private readonly Dictionary<string, int> _goodsCheckedList = [];
         private readonly Dictionary<string, int> _remainingGoods = [];
-        private Dictionary<string, int> goodsInSupply = [];
+        private readonly List<List<int>> _goodsInStore = [[]];
+        private Dictionary<string, int> goodsOnSale = [];
         public AddForm(float fontSize)
         {
             InitializeComponent();
@@ -44,8 +50,7 @@ namespace Revenue
         public void SetConnectionString(string connectionString)
         {
             _connectionString = connectionString;
-            LoadSuppliersComboBox();
-            LoadGoodsComboBox();
+            LoadStoresComboBox();
         }
         public void SetOpenType(string openType, int? selectedId, bool isAdmin)
         {
@@ -54,11 +59,13 @@ namespace Revenue
                 if (openType == "Edit" && selectedId != null)
                 {
                     GoodsComboBox.Enabled = false;
-                    GoodsInSupplyLB.Enabled = false;
+                    GoodsOnSaleLB.Enabled = false;
+                    sellerComboBox.Enabled = false;
+                    storesComboBox.Enabled = false;
                     using (var connection = new NpgsqlConnection(_connectionString))
                     {
                         connection.Open();
-                        string query = "SELECT * FROM supply WHERE id = @SelectedId;";
+                        string query = "SELECT id, revenue_date FROM revenue WHERE id = @SelectedId;";
                         using (var command = new NpgsqlCommand(query, connection))
                         {
                             command.Parameters.AddWithValue("SelectedId", selectedId);
@@ -66,31 +73,30 @@ namespace Revenue
                             {
                                 if (reader.Read())
                                 {
-                                    _currentSupplyId = reader.GetInt32(0);
+                                    _currentRevenueId = reader.GetInt32(0);
                                     DatePicker.Value = reader.GetDateTime(1);
-                                    supplierComboBox.SelectedIndex = _suppliersCombo[_suppliers.FirstOrDefault(x => x.Value == reader.GetInt32(2)).Key];
                                 }
                             }
                         }
                     }
                     CreateBtn.Text = "Обновить";
-                    CreateBtn.Click += UpdateSupply;
+                    CreateBtn.Click += UpdateRevenue;
                 }
                 else if (openType == "Delete")
                 {
-                    if (MessageBox.Show("Вы уверены, что хотите удалить эту поставку?", "Удаление данных", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    if (MessageBox.Show("Вы уверены, что хотите удалить эту выручку?", "Удаление данных", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         using (var connection = new NpgsqlConnection(_connectionString))
                         {
                             connection.Open();
-                            string query = "DELETE FROM supply WHERE id = @Id;";
+                            string query = "DELETE FROM revenue WHERE id = @Id;";
                             using (var command = new NpgsqlCommand(query, connection))
                             {
                                 command.Parameters.AddWithValue("Id", selectedId);
                                 command.ExecuteNonQuery();
                             }
                         }
-                        MessageBox.Show("Удаление поставки успешно!");
+                        MessageBox.Show("Удаление выручки успешно!");
                         this.Close();
                     }
                     else
@@ -110,40 +116,27 @@ namespace Revenue
             }
         }
 
-        private void UpdateSupply(object sender, EventArgs e)
+        private void UpdateRevenue(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Вы уверены, что хотите обновить данные этой поставки?", "Обновление данных", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Вы уверены, что хотите обновить данные этой выручки?", "Обновление данных", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                if (supplierComboBox.SelectedItem == null)
-                {
-                    MessageBox.Show("Пожалуйста, заполните все поля.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                string? supplyName = supplierComboBox.SelectedItem.ToString();
-                if (!_suppliers.TryGetValue(supplyName, out var supplierid))
-                {
-                    MessageBox.Show($"Не существует отдела с названием {supplyName}.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
                 try
                 {
                     using (var connection = new NpgsqlConnection(_connectionString))
                     {
                         connection.Open();
                         string query = @"
-                                UPDATE supply 
-                                SET supply_date = @SupplyDate,
-                                    supplier_id = @SupplierId,
+                                UPDATE revenue 
+                                SET revenue_date = @RevenueDate
                                 WHERE id = @SelectedId;";
                         using (var command = new NpgsqlCommand(query, connection))
                         {
-                            command.Parameters.AddWithValue("SupplyDate", DatePicker.Value);
-                            command.Parameters.AddWithValue("SupplierId", supplierid);
-                            command.Parameters.AddWithValue("SelectedId", _currentSupplyId);
+                            command.Parameters.AddWithValue("RevenueDate", DatePicker.Value);
+                            command.Parameters.AddWithValue("SelectedId", _currentRevenueId);
                             command.ExecuteNonQuery();
                         }
                     }
-                    MessageBox.Show("Данные о поставке изменены успешно!");
+                    MessageBox.Show("Данные о выручке изменены успешно!");
                     this.Close();
                 }
                 catch (Exception ex)
@@ -176,28 +169,33 @@ namespace Revenue
                 }
                 string goodName = GoodsComboBox.SelectedItem.ToString();
                 int countGood = TakeCountToSupply();
-                if (countGood > _remainingGoods[goodName])
+                if (countGood <= 0)
                 {
-                    MessageBox.Show("Товара должно хватать на складе.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Невозможно добавить 0 товаров!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                if (!goodsInSupply.ContainsKey(goodName))
+                if (countGood > _remainingGoods[goodName])
+                {
+                    MessageBox.Show("Товара должно хватать в магазине.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                if (!goodsOnSale.ContainsKey(goodName))
                 {
                     _goodsCheckedList.Add(goodName, index);
-                    goodsInSupply.Add(goodName, countGood);
-                    GoodsInSupplyLB.Items.Add(goodName + " | Кол-во: " + countGood);
-                    _remainingGoods[goodName] += countGood;
+                    goodsOnSale.Add(goodName, countGood);
+                    GoodsOnSaleLB.Items.Add(goodName + " | Кол-во: " + countGood);
+                    _remainingGoods[goodName] -= countGood;
                     RemainingNUD.Value = _remainingGoods[goodName];
                 }
                 else
                 {
-                    GoodsInSupplyLB.Items.Remove(goodName + " | Кол-во: " + goodsInSupply[goodName]);
-                    goodsInSupply[goodName] += countGood;
-                    _remainingGoods[goodName] += countGood;
-                    GoodsInSupplyLB.Items.Add(goodName + " | Кол-во: " + goodsInSupply[goodName]);
+                    GoodsOnSaleLB.Items.Remove(goodName + " | Кол-во: " + goodsOnSale[goodName]);
+                    goodsOnSale[goodName] += countGood;
+                    _remainingGoods[goodName] -= countGood;
+                    GoodsOnSaleLB.Items.Add(goodName + " | Кол-во: " + goodsOnSale[goodName]);
                     RemainingNUD.Value = _remainingGoods[goodName];
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -211,24 +209,24 @@ namespace Revenue
             {
                 int countGood = TakeCountToSupply();
                 string goodName = GoodsComboBox.SelectedItem.ToString();
-                if (countGood > goodsInSupply[goodName])
+                if (countGood > goodsOnSale[goodName])
                 {
                     MessageBox.Show("Слишком много выбрано.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                _remainingGoods[goodName] -= countGood;
-                goodsInSupply[goodName] -= countGood;
-                
+                _remainingGoods[goodName] += countGood;
+                goodsOnSale[goodName] -= countGood;
+
                 _goodsCheckedList.Remove(goodName);
-                if (goodsInSupply[goodName] == 0)
+                if (goodsOnSale[goodName] == 0)
                 {
-                    GoodsInSupplyLB.Items.Remove(goodName + " | Кол-во: " + (goodsInSupply[goodName] + countGood));
-                    goodsInSupply.Remove(goodName);
+                    GoodsOnSaleLB.Items.Remove(goodName + " | Кол-во: " + (goodsOnSale[goodName] + countGood));
+                    goodsOnSale.Remove(goodName);
                 }
                 else
                 {
-                    GoodsInSupplyLB.Items.Remove(goodName + " | Кол-во: " + (goodsInSupply[goodName]+countGood));
-                    GoodsInSupplyLB.Items.Add(goodName + " | Кол-во: " + goodsInSupply[goodName]);
+                    GoodsOnSaleLB.Items.Remove(goodName + " | Кол-во: " + (goodsOnSale[goodName] + countGood));
+                    GoodsOnSaleLB.Items.Add(goodName + " | Кол-во: " + goodsOnSale[goodName]);
                 }
                 RemainingNUD.Value = _remainingGoods[goodName];
 
@@ -239,7 +237,7 @@ namespace Revenue
             }
         }
 
-        private void CreateSupply(int CountGood, int GoodId, int SupplyId)
+        private void CreateRevenue(int CountGood, int GoodId, int RevenueId)
         {
             try
             {
@@ -247,15 +245,15 @@ namespace Revenue
                 {
                     connection.Open();
                     string query = @"
-                                INSERT INTO goods_in_supply 
-                                (count_good, good_id, supply_id)
+                                INSERT INTO goods_in_revenue 
+                                (good_count, good_id, revenue_id)
                                 VALUES
-                                (@CountGood, @GoodId, @SupplyId);";
+                                (@CountGood, @GoodId, @RevenueId);";
                     using (var command = new NpgsqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("CountGood", CountGood);
                         command.Parameters.AddWithValue("GoodId", GoodId);
-                        command.Parameters.AddWithValue("SupplyId", SupplyId);
+                        command.Parameters.AddWithValue("RevenueId", RevenueId);
                         command.ExecuteNonQuery();
                     }
                 }
@@ -268,7 +266,7 @@ namespace Revenue
             }
         }
 
-        private void UpdateGood(int GoodId, int RemainingStock)
+        private void UpdateGood(int GoodInStoreId, int RemainingStock)
         {
             try
             {
@@ -276,13 +274,13 @@ namespace Revenue
                 {
                     connection.Open();
                     string query = @"
-                                UPDATE good 
-                                SET remaining_stock = @RemainingStock
+                                UPDATE goods_in_store
+                                SET count_goods = @RemainingStock
                                 WHERE id = @SelectedId;";
                     using (var command = new NpgsqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("RemainingStock", RemainingStock);
-                        command.Parameters.AddWithValue("SelectedId", GoodId);
+                        command.Parameters.AddWithValue("SelectedId", GoodInStoreId);
                         command.ExecuteNonQuery();
                     }
                 }
@@ -297,45 +295,56 @@ namespace Revenue
 
         private void CreateBtn_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Вы уверены в выборе товаров?", "Создание поставки", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Вы уверены в выборе товаров?", "Создание выручки", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 try
                 {
-                    if (GoodsInSupplyLB.Items == null)
+                    if (GoodsOnSaleLB.Items == null)
                     {
-                        MessageBox.Show("Пожалуйста, выберите товары для поставки.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Пожалуйста, выберите товары для выручки.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    if (supplierComboBox.SelectedItem == null)
+                    if (sellerComboBox.SelectedItem == null)
                     {
                         MessageBox.Show("Пожалуйста, заполните все данные.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    int SupplierId = _suppliers[supplierComboBox.SelectedItem.ToString()];
-                    DateTime SupplyDate = DatePicker.Value;
+                    int SellerId = _sellers[sellerComboBox.SelectedItem.ToString()];
+                    DateTime RevenueDate = DatePicker.Value;
+                    int RevenueCount = 0;
+                    for (int i = 0; i < goodsOnSale.Count; i++)
+                    {
+                        string itemText = GoodsOnSaleLB.Items[i].ToString();
+                        string goodName = itemText.Substring(0, itemText.IndexOf(" | Кол-во:")).Trim();
+                        int countGood = goodsOnSale[goodName];
+                        RevenueCount += _goodsPrice[goodName] * countGood;
+                    }
                     using (var connection = new NpgsqlConnection(_connectionString))
                     {
                         connection.Open();
                         string query = @"
-                                INSERT INTO supply 
-                                (supply_date, supplier_id)
+                                INSERT INTO revenue 
+                                (revenue_date, seller_id, revenue_count)
                                 VALUES
-                                (@SupplyDate, @SupplierId)
+                                (@RevenueDate, @SellerId, @RevenueCount)
                                 RETURNING id;";
                         using (var command = new NpgsqlCommand(query, connection))
                         {
-                            command.Parameters.AddWithValue("SupplyDate", SupplyDate);
-                            command.Parameters.AddWithValue("SupplierId", SupplierId);
-                            _currentSupplyId = Convert.ToInt32(command.ExecuteScalar());
+                            command.Parameters.AddWithValue("RevenueDate", RevenueDate);
+                            command.Parameters.AddWithValue("SellerId", SellerId);
+                            command.Parameters.AddWithValue("RevenueCount", RevenueCount);
+                            _currentRevenueId = Convert.ToInt32(command.ExecuteScalar());
                         }
                     }
-                    for (int i = 0; i < goodsInSupply.Count; i++)
+                    for (int i = 0; i < goodsOnSale.Count; i++)
                     {
-                        string goodName = GoodsInSupplyLB.Items[i].ToString().Split(' ')[0];
-                        int countGood = goodsInSupply[goodName];
-                        int goodId = _goods[goodName];
-                        CreateSupply(countGood, goodId, _currentSupplyId);
-                        UpdateGood(goodId, _remainingGoods[goodName]);
+                        string itemText = GoodsOnSaleLB.Items[i].ToString();
+                        string goodName = itemText.Substring(0, itemText.IndexOf(" | Кол-во:")).Trim();
+                        int countGood = goodsOnSale[goodName];
+                        int goodInStoreId = _goods[goodName];
+                        int GoodId = _goodsId[goodName];
+                        CreateRevenue(countGood, GoodId, _currentRevenueId);
+                        UpdateGood(goodInStoreId, _remainingGoods[goodName]);
                     }
 
                     this.DialogResult = DialogResult.OK;
@@ -358,13 +367,43 @@ namespace Revenue
             this.Close();
         }
 
-        private void LoadSuppliersComboBox()
+        private void LoadSellersComboBox(int store_id)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 int i = 0;
                 connection.Open();
-                var query = @"SELECT id, CONCAT(last_name, ' ', first_name, ' ', surname) FROM supplier;";
+                var query = @"SELECT id, CONCAT(last_name, ' ', first_name, ' ', surname) FROM seller WHERE store_id = @store_id;";
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@store_id", store_id);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var idName = reader.GetInt32(0);
+                            var sellerName = reader.GetString(1);
+
+                            sellerComboBox.Items.Add(sellerName);
+                            _sellers.Add(sellerName, idName);
+                            _sellersCombo.Add(sellerName, i);
+                            i++;
+                        }
+                    }
+                }
+            }
+            if (sellerComboBox.Items.Count != 0) {
+                sellerComboBox.SelectedIndex = 0;
+            }
+        }
+
+        private void LoadStoresComboBox()
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                int i = 0;
+                connection.Open();
+                var query = @"SELECT id, store_name FROM store;";
                 using (var command = new NpgsqlCommand(query, connection))
                 {
                     using (var reader = command.ExecuteReader())
@@ -372,39 +411,51 @@ namespace Revenue
                         while (reader.Read())
                         {
                             var idName = reader.GetInt32(0);
-                            var supplierName = reader.GetString(1);
+                            var storeName = reader.GetString(1);
 
-                            supplierComboBox.Items.Add(supplierName);
-                            _suppliers.Add(supplierName, idName);
-                            _suppliersCombo.Add(supplierName, i);
+                            storesComboBox.Items.Add(storeName);
+                            _stores.Add(storeName, idName);
+                            _storesCombo.Add(storeName, i);
                             i++;
+
                         }
                     }
                 }
             }
         }
-        private void LoadGoodsComboBox()
+
+
+        private void LoadGoodsComboBox(int store_id)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 int i = 0;
                 connection.Open();
-                var query = @"SELECT id, name, remaining_stock FROM good ORDER BY id;";
+                var query = @"
+                            SELECT gs.id, gs.count_goods, gs.good_id, g.name, g.price
+                            FROM goods_in_store gs
+                            LEFT JOIN good g ON g.id = gs.good_id
+                            WHERE gs.store_id = @store_id
+                            ORDER BY gs.good_id;";
                 using (var command = new NpgsqlCommand(query, connection))
                 {
+                    command.Parameters.AddWithValue("@store_id", store_id);
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
                             var id = reader.GetInt32(0);
-                            var goodName = reader.GetString(1);
-                            var remainingStock = reader.GetInt32(2);
+                            var count_goods = reader.GetInt32(1);
+                            var goodId = reader.GetInt32(2);
+                            var goodName = reader.GetString(3);
+                            var goodPrice = reader.GetInt32(4);
 
                             GoodsComboBox.Items.Add(goodName);
-                            RemainingNUD.Value = remainingStock;
                             _goods.Add(goodName, id);
                             _goodsCombo.Add(goodName, i);
-                            _remainingGoods.Add(goodName, remainingStock);
+                            _goodsId.Add(goodName, goodId);
+                            _goodsPrice.Add(goodName, goodPrice);
+                            _remainingGoods.Add(goodName, count_goods);
                             i++;
                         }
                     }
@@ -416,6 +467,30 @@ namespace Revenue
         private void GoodsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             RemainingNUD.Value = _remainingGoods[GoodsComboBox.SelectedItem.ToString()];
+        }
+
+        private void storesComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void storesComboBox_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            _sellers.Clear();
+            _sellersCombo.Clear();
+            _goods.Clear();
+            _goodsCombo.Clear();
+            _goodsId.Clear();
+            _goodsPrice.Clear();
+            _goodsCheckedList.Clear();
+            _remainingGoods.Clear();
+            _goodsInStore.Clear();
+            goodsOnSale.Clear();
+            GoodsComboBox.Items.Clear();
+            sellerComboBox.Items.Clear();
+            GoodsOnSaleLB.Items.Clear();
+            
+            LoadSellersComboBox(_stores[storesComboBox.Text.ToString()]);
+            LoadGoodsComboBox(_stores[storesComboBox.Text.ToString()]);
         }
     }
 }

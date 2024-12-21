@@ -33,18 +33,20 @@
             label1 = new Label();
             CreateBtn = new Button();
             CancelBtn = new Button();
-            supplierComboBox = new ComboBox();
+            sellerComboBox = new ComboBox();
             UnitLabel = new Label();
             label3 = new Label();
             label4 = new Label();
             panel2 = new Panel();
-            GoodsInSupplyLB = new ListBox();
+            GoodsOnSaleLB = new ListBox();
             label5 = new Label();
             GoodsComboBox = new ComboBox();
             AddBtn = new Button();
             DeleteBtn = new Button();
             RemainingNUD = new NumericUpDown();
             DatePicker = new DateTimePicker();
+            storesComboBox = new ComboBox();
+            StoreLabel = new Label();
             TopPanel.SuspendLayout();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)RemainingNUD).BeginInit();
@@ -67,9 +69,9 @@
             label2.Font = new Font("Bahnschrift", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
             label2.Location = new Point(12, 40);
             label2.Name = "label2";
-            label2.Size = new Size(131, 33);
+            label2.Size = new Size(121, 33);
             label2.TabIndex = 1;
-            label2.Text = "Поставка";
+            label2.Text = "Выручка";
             // 
             // label1
             // 
@@ -106,77 +108,77 @@
             CancelBtn.UseVisualStyleBackColor = false;
             CancelBtn.Click += CancelBtn_Click;
             // 
-            // supplierComboBox
+            // sellerComboBox
             // 
-            supplierComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            supplierComboBox.FlatStyle = FlatStyle.Popup;
-            supplierComboBox.Font = new Font("Bahnschrift", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            supplierComboBox.FormattingEnabled = true;
-            supplierComboBox.Location = new Point(222, 90);
-            supplierComboBox.Name = "supplierComboBox";
-            supplierComboBox.Size = new Size(550, 41);
-            supplierComboBox.TabIndex = 6;
+            sellerComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            sellerComboBox.FlatStyle = FlatStyle.Popup;
+            sellerComboBox.Font = new Font("Bahnschrift", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            sellerComboBox.FormattingEnabled = true;
+            sellerComboBox.Location = new Point(222, 183);
+            sellerComboBox.Name = "sellerComboBox";
+            sellerComboBox.Size = new Size(550, 41);
+            sellerComboBox.TabIndex = 6;
             // 
             // UnitLabel
             // 
             UnitLabel.AutoSize = true;
             UnitLabel.Font = new Font("Bahnschrift", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            UnitLabel.Location = new Point(56, 93);
+            UnitLabel.Location = new Point(71, 186);
             UnitLabel.Name = "UnitLabel";
-            UnitLabel.Size = new Size(160, 33);
+            UnitLabel.Size = new Size(145, 33);
             UnitLabel.TabIndex = 14;
-            UnitLabel.Text = "Поставщик:";
+            UnitLabel.Text = "Продавец:";
             // 
             // label3
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Bahnschrift", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label3.Location = new Point(12, 137);
+            label3.Location = new Point(22, 137);
             label3.Name = "label3";
-            label3.Size = new Size(204, 33);
+            label3.Size = new Size(194, 33);
             label3.TabIndex = 15;
-            label3.Text = "Дата поставки:";
+            label3.Text = "Дата выручки:";
             // 
             // label4
             // 
             label4.AutoSize = true;
             label4.Font = new Font("Bahnschrift", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label4.Location = new Point(71, 221);
+            label4.Location = new Point(71, 276);
             label4.Name = "label4";
-            label4.Size = new Size(241, 33);
+            label4.Size = new Size(254, 33);
             label4.TabIndex = 18;
-            label4.Text = "Товары на складе:";
+            label4.Text = "Товары в магазине:";
             // 
             // panel2
             // 
             panel2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             panel2.AutoSize = true;
-            panel2.Controls.Add(GoodsInSupplyLB);
-            panel2.Location = new Point(412, 257);
+            panel2.Controls.Add(GoodsOnSaleLB);
+            panel2.Location = new Point(412, 312);
             panel2.Name = "panel2";
             panel2.Size = new Size(360, 250);
             panel2.TabIndex = 20;
             // 
-            // GoodsInSupplyLB
+            // GoodsOnSaleLB
             // 
-            GoodsInSupplyLB.Dock = DockStyle.Fill;
-            GoodsInSupplyLB.Font = new Font("Bahnschrift", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            GoodsInSupplyLB.FormattingEnabled = true;
-            GoodsInSupplyLB.ItemHeight = 19;
-            GoodsInSupplyLB.Location = new Point(0, 0);
-            GoodsInSupplyLB.Name = "GoodsInSupplyLB";
-            GoodsInSupplyLB.Size = new Size(360, 250);
-            GoodsInSupplyLB.TabIndex = 0;
+            GoodsOnSaleLB.Dock = DockStyle.Fill;
+            GoodsOnSaleLB.Font = new Font("Bahnschrift", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            GoodsOnSaleLB.FormattingEnabled = true;
+            GoodsOnSaleLB.ItemHeight = 19;
+            GoodsOnSaleLB.Location = new Point(0, 0);
+            GoodsOnSaleLB.Name = "GoodsOnSaleLB";
+            GoodsOnSaleLB.Size = new Size(360, 250);
+            GoodsOnSaleLB.TabIndex = 0;
             // 
             // label5
             // 
             label5.AutoSize = true;
             label5.Font = new Font("Bahnschrift", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label5.Location = new Point(465, 221);
+            label5.Location = new Point(465, 276);
             label5.Name = "label5";
-            label5.Size = new Size(253, 33);
+            label5.Size = new Size(261, 33);
             label5.TabIndex = 21;
-            label5.Text = "Товары в поставке:";
+            label5.Text = "Проданные товары:";
             // 
             // GoodsComboBox
             // 
@@ -185,7 +187,7 @@
             GoodsComboBox.FlatStyle = FlatStyle.Popup;
             GoodsComboBox.Font = new Font("Bahnschrift", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
             GoodsComboBox.FormattingEnabled = true;
-            GoodsComboBox.Location = new Point(12, 257);
+            GoodsComboBox.Location = new Point(12, 312);
             GoodsComboBox.Name = "GoodsComboBox";
             GoodsComboBox.Size = new Size(240, 41);
             GoodsComboBox.TabIndex = 22;
@@ -196,7 +198,7 @@
             AddBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             AddBtn.BackColor = Color.DodgerBlue;
             AddBtn.Font = new Font("Bahnschrift", 24F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            AddBtn.Location = new Point(12, 304);
+            AddBtn.Location = new Point(12, 359);
             AddBtn.Name = "AddBtn";
             AddBtn.Size = new Size(170, 60);
             AddBtn.TabIndex = 23;
@@ -209,7 +211,7 @@
             DeleteBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             DeleteBtn.BackColor = Color.DodgerBlue;
             DeleteBtn.Font = new Font("Bahnschrift", 24F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            DeleteBtn.Location = new Point(202, 304);
+            DeleteBtn.Location = new Point(208, 359);
             DeleteBtn.Name = "DeleteBtn";
             DeleteBtn.Size = new Size(170, 60);
             DeleteBtn.TabIndex = 24;
@@ -220,7 +222,7 @@
             // RemainingNUD
             // 
             RemainingNUD.Font = new Font("Bahnschrift", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            RemainingNUD.Location = new Point(258, 258);
+            RemainingNUD.Location = new Point(258, 312);
             RemainingNUD.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
             RemainingNUD.Name = "RemainingNUD";
             RemainingNUD.ReadOnly = true;
@@ -240,12 +242,38 @@
             DatePicker.Size = new Size(550, 40);
             DatePicker.TabIndex = 27;
             // 
+            // storesComboBox
+            // 
+            storesComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            storesComboBox.DropDownWidth = 400;
+            storesComboBox.FlatStyle = FlatStyle.Popup;
+            storesComboBox.Font = new Font("Bahnschrift", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            storesComboBox.FormattingEnabled = true;
+            storesComboBox.Location = new Point(222, 93);
+            storesComboBox.Name = "storesComboBox";
+            storesComboBox.Size = new Size(550, 41);
+            storesComboBox.TabIndex = 28;
+            storesComboBox.SelectedIndexChanged += storesComboBox_SelectedIndexChanged;
+            storesComboBox.SelectionChangeCommitted += storesComboBox_SelectionChangeCommitted;
+            // 
+            // StoreLabel
+            // 
+            StoreLabel.AutoSize = true;
+            StoreLabel.Font = new Font("Bahnschrift", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            StoreLabel.Location = new Point(90, 96);
+            StoreLabel.Name = "StoreLabel";
+            StoreLabel.Size = new Size(126, 33);
+            StoreLabel.TabIndex = 29;
+            StoreLabel.Text = "Магазин:";
+            // 
             // AddForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(784, 661);
             ControlBox = false;
+            Controls.Add(StoreLabel);
+            Controls.Add(storesComboBox);
             Controls.Add(DatePicker);
             Controls.Add(RemainingNUD);
             Controls.Add(DeleteBtn);
@@ -256,13 +284,13 @@
             Controls.Add(label4);
             Controls.Add(label3);
             Controls.Add(UnitLabel);
-            Controls.Add(supplierComboBox);
+            Controls.Add(sellerComboBox);
             Controls.Add(CancelBtn);
             Controls.Add(CreateBtn);
             Controls.Add(TopPanel);
             Name = "AddForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Управление поставками";
+            Text = "Управление выручками";
             TopPanel.ResumeLayout(false);
             TopPanel.PerformLayout();
             panel2.ResumeLayout(false);
@@ -278,18 +306,20 @@
         private Label label1;
         private Button CreateBtn;
         private Button CancelBtn;
-        private ComboBox supplierComboBox;
+        private ComboBox sellerComboBox;
         private ComboBox streetComboBox;
         private Label UnitLabel;
         private Label label3;
         private Label label4;
         private Panel panel2;
-        private ListBox GoodsInSupplyLB;
+        private ListBox GoodsOnSaleLB;
         private Label label5;
         private ComboBox GoodsComboBox;
         private Button AddBtn;
         private Button DeleteBtn;
         private NumericUpDown RemainingNUD;
         private DateTimePicker DatePicker;
+        private ComboBox storesComboBox;
+        private Label StoreLabel;
     }
 }

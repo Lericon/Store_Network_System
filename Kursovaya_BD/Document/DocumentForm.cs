@@ -41,11 +41,9 @@ namespace Document
                         {
                             var dataTable = new DataTable();
                             adapter.Fill(dataTable);
-                            richTextBox1.Visible = false;
                             DoBtn.Visible = false;
                             CancelBtn.Visible = false;
 
-                            DocumentDGV.Visible = true;
                             DocumentDGV.DataSource = dataTable;
                             DocumentDGV.AutoSize = true;
                             CancelSaveBtn.Visible = true;
@@ -114,11 +112,10 @@ namespace Document
 
         private void CancelSaveBtn_Click(object sender, EventArgs e)
         {
-            richTextBox1.Visible = true;
             DoBtn.Visible = true;
             CancelBtn.Visible = true;
-
-            DocumentDGV.Visible = false;
+            DocumentDGV.DataSource = null;
+            DocumentDGV.Refresh();
             CancelSaveBtn.Visible = false;
             SaveBtn.Visible = false;
         }
@@ -126,6 +123,40 @@ namespace Document
         private void CancelBtn_Click(object sender, EventArgs e)
         {
             this.Dispose();
+        }
+
+        private void GoodInStoreBtn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string query = @"SELECT * FROM goods_in_store;";
+                richTextBox1.Text = query;
+                using (var connection = new NpgsqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    using (var command = new NpgsqlCommand(query, connection))
+                    {
+                        using (var adapter = new NpgsqlDataAdapter(command))
+                        {
+                            var dataTable = new DataTable();
+                            adapter.Fill(dataTable);
+                            DoBtn.Visible = false;
+                            CancelBtn.Visible = false;
+
+                            DocumentDGV.DataSource = dataTable;
+                            DocumentDGV.AutoSize = true;
+                            CancelSaveBtn.Visible = true;
+                            SaveBtn.Visible = true;
+                            CenterToScreen();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка! " + ex.Message);
+
+            }
         }
     }
 }

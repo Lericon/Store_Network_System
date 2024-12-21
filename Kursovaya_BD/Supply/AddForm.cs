@@ -176,11 +176,6 @@ namespace Supply
                 }
                 string goodName = GoodsComboBox.SelectedItem.ToString();
                 int countGood = TakeCountToSupply();
-                if (countGood > _remainingGoods[goodName])
-                {
-                    MessageBox.Show("Товара должно хватать на складе.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
                 if (!goodsInSupply.ContainsKey(goodName))
                 {
                     _goodsCheckedList.Add(goodName, index);

@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Guna.UI2.WinForms" Version="2.0.4.6" />
     <PackageReference Include="Npgsql" Version="9.0.1" />
   </ItemGroup>
 
@@ -25,9 +26,14 @@
     <ProjectReference Include="..\Bank\Bank.csproj" />
     <ProjectReference Include="..\Departments\Department.csproj" />
     <ProjectReference Include="..\Document\Document.csproj" />
+    <ProjectReference Include="..\GoodsInRequest\GoodsInRequest.csproj" />
+    <ProjectReference Include="..\GoodsInRevenue\GoodsInRevenue.csproj" />
+    <ProjectReference Include="..\GoodsInStore\GoodsInStore.csproj" />
+    <ProjectReference Include="..\GoodsInSupply\GoodsInSupply.csproj" />
     <ProjectReference Include="..\Good\Good.csproj" />
     <ProjectReference Include="..\Qualifications\Qualification.csproj" />
     <ProjectReference Include="..\Request\Request.csproj" />
+    <ProjectReference Include="..\Revenue\Revenue.csproj" />
     <ProjectReference Include="..\Seller\Seller.csproj" />
     <ProjectReference Include="..\Store\Store.csproj" />
     <ProjectReference Include="..\Street\Street.csproj" />

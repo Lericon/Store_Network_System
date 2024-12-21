@@ -61,6 +61,7 @@
             // 
             numericUpDown1.Font = new Font("Bahnschrift", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
             numericUpDown1.Location = new Point(12, 56);
+            numericUpDown1.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
             numericUpDown1.Name = "numericUpDown1";
             numericUpDown1.Size = new Size(360, 40);
             numericUpDown1.TabIndex = 1;

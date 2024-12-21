@@ -159,7 +159,7 @@ namespace Kursovaya_BD.Views
                 menuItems[module.Id] = menuItem;
                 if (module.IdParent == 0)
                 {
-                    menuItem.ForeColor = Color.Black;
+                    menuItem.ForeColor = Color.White;
                     MainMenu.Items.Add(menuItem);
                 }
                 else if (menuItems.TryGetValue(module.IdParent, out var parentMenuItem))
@@ -294,8 +294,7 @@ namespace Kursovaya_BD.Views
 
             menuItems[module.Id] = menuItem;
 
-            // добавление в глав. меню или вложение в родительский элемент
-            if (module.IdParent == 0) // высшая иерархия элемент
+            if (module.IdParent == 0)
             {
                 menuItem.ForeColor = Color.Black;
                 MainMenu.Items.Add(menuItem);
@@ -308,13 +307,12 @@ namespace Kursovaya_BD.Views
 
         private void AdjustFormSize()
         {
-            // Получаем текущую ширину MenuStrip
             int menuStripWidth = MainMenu.PreferredSize.Width;
 
-            // Проверяем, достаточно ли ширины формы для размещения MenuStrip
             if (menuStripWidth > this.Width)
             {
-                this.Width = menuStripWidth + 20; // Добавляем небольшой отступ
+                this.Width = menuStripWidth + 20;
+                this.MinimumSize = new Size(this.Width, this.MinimumSize.Height);
             }
         }
         private void AddBtn_Click(object sender, EventArgs e)
@@ -450,8 +448,8 @@ namespace Kursovaya_BD.Views
             RefreshData();
             string searchText = SearchTextBox.Text.Trim().ToLower();
 
-            DataTable originalDataTable = MainDataGridView.DataSource as DataTable; 
-            if (originalDataTable == null) return; 
+            DataTable originalDataTable = MainDataGridView.DataSource as DataTable;
+            if (originalDataTable == null) return;
 
             if (string.IsNullOrEmpty(searchText))
             {
@@ -470,8 +468,8 @@ namespace Kursovaya_BD.Views
                 {
                     if (item != null && item.ToString().ToLower().Contains(searchText))
                     {
-                        filteredTable.ImportRow(row); 
-                        break; 
+                        filteredTable.ImportRow(row);
+                        break;
                     }
                 }
             }
